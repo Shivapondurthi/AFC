@@ -1,84 +1,117 @@
+"use client";
 import React from "react";
+import { motion, useInView } from "framer-motion";
+import Image from "next/image";
 
-export const Contact  =()=> {
-  return (
-    <div className="absolute w-[1440px] h-[600px] top-[3277px] left-[487px]">
-      <div className="relative w-[1207px] h-[388px] top-[123px] left-[117px]">
-        <div className="absolute w-[381px] h-[388px] top-0 left-0">
-          <div className="relative w-[375px] h-[388px]">
-            <div className="absolute w-[362px] h-[388px] top-0 left-0 bg-black" />
-
-            <img
-              className="w-[92px] h-[92px] top-[35px] left-[135px] absolute object-cover"
-              alt="Image"
-              src="https://c.animaapp.com/89fS0TNm/img/image-58-2@2x.png"
-            />
-
-            <div className="left-[57px] absolute h-[27px] top-[154px] [font-family:'Nunito',Helvetica] font-extrabold text-white text-[32px] text-center tracking-[4.00px] leading-[27px] whitespace-nowrap">
-              SHAMSHABAD
-            </div>
-
-            <p className="absolute w-[331px] top-[154px] left-11 [font-family:'Inter',Helvetica] font-semibold text-white text-xl tracking-[2.00px] leading-10">
-              <br /> 📞 Call +91 7995373004
-            </p>
-
-            <div className="top-[234px] absolute left-[51px] [font-family:'Inter',Helvetica] font-semibold text-white text-base tracking-[2.00px] leading-10 whitespace-nowrap">
-              ✉ Afcindiaofficial@gmail.com
-            </div>
-          </div>
-        </div>
-
-        <div className="absolute w-[381px] h-[388px] top-0 left-[416px]">
-          <div className="relative w-[375px] h-[388px]">
-            <div className="absolute w-[362px] h-[388px] top-0 left-0 bg-black" />
-
-            <img
-              className="w-[92px] h-[92px] top-[35px] left-[135px] absolute object-cover"
-              alt="Image"
-              src="https://c.animaapp.com/89fS0TNm/img/image-58-2@2x.png"
-            />
-
-            <div className="left-[51px] absolute h-[27px] top-[154px] [font-family:'Nunito',Helvetica] font-extrabold text-white text-[32px] text-center tracking-[4.00px] leading-[27px] whitespace-nowrap">
-              SHAMSHABAD
-            </div>
-
-            <p className="absolute w-[331px] top-[154px] left-11 [font-family:'Inter',Helvetica] font-semibold text-white text-xl tracking-[2.00px] leading-10">
-              <br /> 📞 Call +91 7995373004
-            </p>
-
-            <div className="top-[234px] absolute left-[51px] [font-family:'Inter',Helvetica] font-semibold text-white text-base tracking-[2.00px] leading-10 whitespace-nowrap">
-              ✉ Afcindiaofficial@gmail.com
-            </div>
-          </div>
-        </div>
-
-        <div className="absolute w-[381px] h-[388px] top-0 left-[832px]">
-          <div className="relative w-[375px] h-[388px]">
-            <div className="absolute w-[362px] h-[388px] top-0 left-0 bg-black" />
-
-            <img
-              className="w-[92px] h-[92px] top-[35px] left-[135px] absolute object-cover"
-              alt="Image"
-              src="https://c.animaapp.com/89fS0TNm/img/image-58-2@2x.png"
-            />
-
-            <div className="left-[51px] absolute h-[27px] top-[154px] [font-family:'Nunito',Helvetica] font-extrabold text-white text-[32px] text-center tracking-[4.00px] leading-[27px] whitespace-nowrap">
-              SHAMSHABAD
-            </div>
-
-            <p className="absolute w-[331px] top-[150px] left-11 [font-family:'Inter',Helvetica] font-semibold text-white text-xl tracking-[2.00px] leading-10">
-              <br /> 📞 Call +91 7995373004
-            </p>
-
-            <div className="top-[230px] absolute left-[51px] [font-family:'Inter',Helvetica] font-semibold text-white text-base tracking-[2.00px] leading-10 whitespace-nowrap">
-              ✉ Afcindiaofficial@gmail.com
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+type ContactCardProps = {
+  title: string;
+  phone: string;
+  email: string;
+  image: string;
 };
 
+const ContactCard: React.FC<ContactCardProps> = ({ title, phone, email, image }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+    viewport={{ once: true }}
+    whileHover={{ scale: 1.05 }}
+    className="w-[375px] bg-black text-white p-6 rounded shadow-[0_4px_15px_5px_rgba(235,189,40,0.5)] text-center"
+  >
+    <motion.div
+      initial={{ scale: 0 }}
+      whileInView={{ scale: 1 }}
+      transition={{ duration: 0.3, delay: 0.2 }}
+      viewport={{ once: true }}
+    >
+      <Image
+        width={92}
+        height={92}
+        className="mx-auto mb-4 object-cover"
+        src={image}
+        alt="Location"
+      />
+    </motion.div>
+    <motion.h2
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.3 }}
+      viewport={{ once: true }}
+      className="text-[32px] font-extrabold tracking-[4px] mb-2"
+    >
+      {title}
+    </motion.h2>
+    <motion.p
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.4 }}
+      viewport={{ once: true }}
+      className="text-xl font-semibold tracking-[2px] leading-10"
+    >
+      📞 Call {phone}
+    </motion.p>
+    <motion.p
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.5 }}
+      viewport={{ once: true }}
+      className="text-base font-semibold tracking-[2px] leading-10 mt-2"
+    >
+      ✉ {email}
+    </motion.p>
+  </motion.div>
+);
+
+export const Contact: React.FC = () => {
+  const sectionRef = React.useRef(null);
+  const isInView = useInView(sectionRef, { once: true });
+
+  const contacts: ContactCardProps[] = [
+    {
+      title: "SHAMSHABAD",
+      phone: "+91 7995373004",
+      email: "afcindiaofficial@gmail.com",
+      image: "https://c.animaapp.com/89fS0TNm/img/image-58-2@2x.png",
+    },
+    {
+      title: "HYDERABAD",
+      phone: "+91 9876543210",
+      email: "hyderabad@afcindia.com",
+      image: "https://c.animaapp.com/89fS0TNm/img/image-58-2@2x.png",
+    },
+    {
+      title: "SECUNDERABAD",
+      phone: "+91 9123456789",
+      email: "secunderabad@afcindia.com",
+      image: "https://c.animaapp.com/89fS0TNm/img/image-58-2@2x.png",
+    },
+  ];
+
+  return (
+    <motion.div
+      ref={sectionRef}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className="w-full flex justify-center py-20"
+    >
+      <div className="flex flex-wrap justify-center gap-12 max-w-7xl">
+        {contacts.map((contact, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: index * 0.2 }}
+          >
+            <ContactCard {...contact} />
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
 
 export default Contact;

@@ -1,129 +1,144 @@
-import React from "react";
-import { Frame } from "./Frame";
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+
+interface FoodItem {
+  title: string
+  price: string
+  image: string
+}
 
 
-export const Menu = ()=> {
+
+const menuItems: string[] = ['Pizza', 'Milk Shakes', 'Combos', 'Fries', 'Mojitos', 'Deserts']
+
+const foodData: Record<string, FoodItem[]> = {
+  Pizza: [
+    { title: 'Margherita Pizza', price: '₹199', image: '/images/pizza.png' },
+    { title: 'Pepperoni Pizza', price: '₹249', image: '/images/pizza.png' },
+    { title: 'Margherita Pizza', price: '₹199', image: '/images/pizza.png' },
+    { title: 'Pepperoni Pizza', price: '₹249', image: '/images/pizza.png' },
+  ],
+  'Milk Shakes': [
+    { title: 'Chocolate Shake', price: '₹99', image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b' },
+    { title: 'Strawberry Shake', price: '₹89', image: 'https://images.unsplash.com/photo-1559628233-5e5a5c55f9f5' },
+  ],
+  Combos: [
+    { title: 'Burger Combo', price: '₹299', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349' },
+    { title: 'Pizza Combo', price: '₹349', image: 'https://images.unsplash.com/photo-1601924828371-d660d3b9f5b0' },
+  ],
+  Fries: [
+    { title: 'Classic Fries', price: '₹79', image: 'https://images.unsplash.com/photo-1606755962773-0b3b220f5b4d' },
+    { title: 'Peri Peri Fries', price: '₹99', image: 'https://images.unsplash.com/photo-1571091655789-9b3d8ddf10b8' },
+  ],
+  Mojitos: [
+    { title: 'Mint Mojito', price: '₹59', image: 'https://images.unsplash.com/photo-1589308078051-dba3c1b08358' },
+    { title: 'Lime Mojito', price: '₹69', image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445' },
+  ],
+  Deserts: [
+    { title: 'Chocolate Lava Cake', price: '₹129', image: 'https://images.unsplash.com/photo-1586985289688-1b4a1ae622b8' },
+    { title: 'Vanilla Ice Cream', price: '₹79', image: 'https://images.unsplash.com/photo-1589712235274-22d3d8bc5a36' },
+  ],
+}
+
+export default function Home() {
+  useEffect(() => {
+    AOS.init({ duration: 800 })
+  }, [])
+  const [activeCategory, setActiveCategory] = useState<string>('Pizza')
+
   return (
-    <div
-      className="bg-black flex flex-row justify-center w-full"
-      data-model-id="767:462"
-    >
-      <div className="bg-black overflow-hidden w-[1440px] h-[4032px] relative">
-        <div className="absolute w-[2492px] h-[4032px] top-0 left-[-565px]">
-          <div className="absolute w-[1040px] h-[983px] top-[920px] left-[1452px] rounded-[900px] [background:radial-gradient(50%_50%_at_50%_50%,rgba(235,190,41,1)_0%,rgba(133,108,23,1)_100%)] opacity-10" />
-
-          <div className="absolute w-[1040px] h-[983px] top-[1989px] left-0 rounded-[900px] [background:radial-gradient(50%_50%_at_50%_50%,rgba(235,190,41,1)_0%,rgba(133,108,23,1)_100%)] opacity-10" />
-
-          <div className="absolute w-[1040px] h-[983px] top-[202px] left-[1385px] rounded-[900px] [background:radial-gradient(50%_50%_at_50%_50%,rgba(235,190,41,1)_0%,rgba(133,108,23,1)_100%)] opacity-10" />
-
-          <img
-            className="w-[872px] h-[1600px] top-[1401px] left-[1133px] absolute object-cover"
-            alt="Image"
-            src="https://c.animaapp.com/89fS0TNm/img/image-2-2.png"
-          />
-
-          <img
-            className="w-[734px] h-[1600px] top-[73px] left-[565px] absolute object-cover"
-            alt="Image"
-            src="https://c.animaapp.com/89fS0TNm/img/image-54.png"
-          />
-
-          <img
-            className="w-[1109px] h-[954px] top-[3078px] left-[565px] absolute object-cover"
-            alt="Image"
-            src="https://c.animaapp.com/89fS0TNm/img/image-57.png"
-          />
-
-        
-        
-          <div className="absolute top-[161px] left-[1109px] [font-family:'Nunito',Helvetica] font-extrabold text-white text-[64px] tracking-[0] leading-[normal]">
-            OUR MENU
-          </div>
-
-          <div className="absolute w-[266px] h-3.5 top-[249px] left-[1152px]">
-            <div className="w-[13px] h-3.5 left-[126px] rounded-[6.52px/7px] absolute top-0 bg-[#ebbd28]" />
-
-            <img
-              className="w-[104px] top-1 absolute h-[3px] left-0"
-              alt="Line"
-              src="https://c.animaapp.com/89fS0TNm/img/line-1.svg"
-            />
-
-            <img
-              className="w-[104px] top-1 left-[162px] absolute h-[3px]"
-              alt="Line"
-              src="https://c.animaapp.com/89fS0TNm/img/line-2.svg"
-            />
-          </div>
-
-       
-          <div className="absolute w-[275px] h-[578px] top-[1401px] left-[566px] bg-[#141414] rounded-[0px_30px_30px_0px] overflow-hidden">
-            <div className="absolute top-[145px] left-[65px] [font-family:'Nunito',Helvetica] font-bold text-white text-2xl tracking-[0.24px] leading-[43.5px] whitespace-nowrap">
-              MILK SHAKES
-            </div>
-
-            <div className="absolute top-[228px] left-[65px] [font-family:'Nunito',Helvetica] font-bold text-white text-2xl tracking-[0.24px] leading-[43.5px] whitespace-nowrap">
-              COMBOS
-            </div>
-
-            <div className="absolute top-[311px] left-[65px] font-bold text-2xl tracking-[0.24px] leading-[43.5px] [font-family:'Nunito',Helvetica] text-white whitespace-nowrap">
-              FRIES
-            </div>
-
-            <div className="absolute top-[394px] left-[65px] [font-family:'Nunito',Helvetica] font-bold text-white text-2xl tracking-[0.24px] leading-[43.5px] whitespace-nowrap">
-              MOJITOS
-            </div>
-
-            <div className="absolute top-[477px] left-[65px] [font-family:'Nunito',Helvetica] font-bold text-white text-2xl tracking-[0.24px] leading-[43.5px] whitespace-nowrap">
-              DESERTS
-            </div>
-
-            <div className="absolute w-[246px] h-[63px] top-11 left-0">
-              <div className="relative w-[244px] h-[63px] bg-[#ebbd28] rounded-[0px_30px_30px_0px]">
-                <div className="absolute top-2.5 left-[72px] [font-family:'Nunito',Helvetica] font-bold text-black text-2xl tracking-[1.00px] leading-[43.5px] whitespace-nowrap">
-                  PIZZA
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="absolute w-[202px] h-[69px] top-[1332px] left-[1216px]">
-            <div className="absolute top-0 left-[21px] [font-family:'Nunito',Helvetica] font-extrabold text-white text-[40px] tracking-[3.84px] leading-[43.5px] whitespace-nowrap">
-              {" "}
-              PIZZA
-            </div>
-
-            <div className="absolute w-[200px] h-3.5 top-[55px] left-0">
-              <div className="w-2.5 h-3.5 left-[95px] rounded-[4.9px/7px] absolute top-0 bg-[#ebbd28]" />
-
-              <img
-                className="w-[78px] top-1 absolute h-[3px] left-0"
-                alt="Line"
-                src="https://c.animaapp.com/89fS0TNm/img/line-1-2.svg"
-              />
-
-              <img
-                className="w-[78px] top-1 left-[122px] absolute h-[3px]"
-                alt="Line"
-                src="https://c.animaapp.com/89fS0TNm/img/line-2-2.svg"
-              />
-            </div>
-          </div>
-
-          <Frame />
-         
+    <>
+      <div className="flex min-h-screen text-white p-8">
+        {/* Sidebar */}
+        <div className="w-1/5  p-4 mt-45 space-y-4 rounded-r-xl bg-black">
+          {menuItems.map((item) => (
+            <button
+              key={item}
+              onClick={() => setActiveCategory(item)}
+              className={`block w-full text-left text-xl py-2 px-4 rounded ${activeCategory === item
+                  ? 'bg-yellow-400 text-black font-semibold rounded-r-full'
+                  : 'hover:bg-gray-900 rounded-r-full'
+                }`}
+            >
+              {item}
+            </button>
+          ))}
         </div>
 
-        <div className="absolute w-[1040px] h-[983px] top-[4064px] left-[915px] rounded-[900px] [background:radial-gradient(50%_50%_at_50%_50%,rgba(235,190,41,1)_0%,rgba(133,108,23,1)_100%)] opacity-10" />
+        {/* Food Cards */}
+        <div className="w-4/5 px-8 overflow-hidden">
+          <>
+            <AnimatePresence mode="wait">
+              <motion.h1
+                key={activeCategory + '-title'}
+                initial={{ opacity: 0, y: 0 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.4 }}
+                className="text-center  text-6xl font-sans mb-4"
+              >
+                {activeCategory}
+              </motion.h1>
+              <div className="flex justify-center items-center gap-4 mb-8">
+                <div className="h-[3px] w-20 bg-yellow-300" />
+                <div className="w-5 h-5 rounded-full bg-[#ebbd28]" />
+                <div className="h-[3px] w-20 bg-yellow-300" />
+              </div>
+            </AnimatePresence>
 
-        <div className="absolute w-[1040px] h-[983px] top-[5214px] left-[-463px] rounded-[900px] [background:radial-gradient(50%_50%_at_50%_50%,rgba(235,190,41,1)_0%,rgba(133,108,23,1)_100%)] opacity-10" />
+            <div className="flex min-h-screen text-white p-8">
+              {/* Sidebar unchanged */}
 
-        <img
-          className="w-[1600px] h-[1600px] top-[6110px] left-[2424px] absolute object-cover"
-          alt="Image"
-          src="https://c.animaapp.com/89fS0TNm/img/image-55.png"
-        />
+              {/* Food Cards with animation */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeCategory + '-food'}
+                  initial={{ opacity: 0, x: 0 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -40 }}
+                  transition={{ duration: 0.4 }}
+                  className="w-full px-8 py-4 overflow-hidden"
+                >
+                  {foodData[activeCategory].map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex bg-black text-white rounded-lg overflow-hidden shadow-lg my-4"
+                      data-aos="fade-up"
+                    >
+                      <img src={item.image} alt={item.title} className="w-120 h-64 object-cover" />
+                      <div className="p-4 flex flex-col justify-between w-full">
+                        <div>
+                          <h2 className="text-xl font-bold">{item.title}</h2>
+                          <div className="flex justify-start items-center gap-2 mb-8 ml-2">
+                            <div className="h-[1px] w-10 bg-yellow-300" />
+                            <div className="w-2 h-2 rounded-full bg-[#ebbd28]" />
+                            <div className="h-[1px] w-10 bg-yellow-300" />
+                          </div>
+                          <div className="flex items-center mt-1 mb-2 text-yellow-400">★★★★★</div>
+                          <p className="text-sm text-gray-300">
+                            Experience the perfect blend of premium ingredients and expert craftsmanship in every bite.
+                          </p>
+                        </div>
+                        <div className="flex justify-between items-center mt-4">
+                          <span className="text-yellow-400 text-lg font-bold">{item.price}</span>
+                          <button className="bg-yellow-400 text-black px-6 py-2 rounded-full font-semibold text-sm hover:bg-yellow-300">
+                            Order Now
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </>
+
+        </div>
       </div>
-    </div>
-  );
-};
+    </>
+  )
+}
