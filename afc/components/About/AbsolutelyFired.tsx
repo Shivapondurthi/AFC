@@ -1,31 +1,22 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import Image from "next/image";
 
 const AboutSection = () => {
-  const [tab, setTab] = useState<"mission" | "vision">("mission");
   const textRef = useRef(null);
-  const missionRef = useRef(null);
   const isInView = useInView(textRef, { once: true });
-  const isMissionInView = useInView(missionRef, { once: true });
-
-  const fadeUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  };
 
   return (
-    <div className="bg-black text-white font-nunito">
+    <div className=" text-white font-nunito">
       {/* Hero Banner */}
       <section className="relative w-full h-screen">
-        <img
+        <Image
           src="/images/about-us-hero.jpg"
           className="w-full h-full object-cover"
           alt="About Hero"
+          fill
+          priority
         />
         <motion.div
           initial={{ opacity: 0, x: -60 }}
@@ -33,7 +24,7 @@ const AboutSection = () => {
           transition={{ duration: 0.8 }}
           className="absolute bottom-0 left-0 bg-black bg-opacity-60 p-10 rounded-md max-w-lg"
         >
-          <h2 className="text-3xl font-extrabold text-[#ebbd28]">
+          <h2 className="text-4xl md:text-4xl  text-[#ebbd28] font-serif w-auto">
             Absolutely Fried Chicken
           </h2>
         </motion.div>
@@ -43,20 +34,14 @@ const AboutSection = () => {
       <section className="w-full px-6 py-20 flex justify-center">
         <motion.div
           ref={textRef}
-          variants={fadeUp}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.8 }}
           className="max-w-4xl text-2xl leading-loose"
         >
-          <p>
-            <span className="text-[#ebbd28] font-bold">Absolutely Fried Chicken</span>{" "}
-            is a celebration of crispy,golden perfection, bringing together the best of comfort food with a vibrant,
-            welcoming atmosphere. Known for its signature secret recipe, AFC delivers irresistibly juicy,
-            flavor-packed bites that keep guests coming back for more.
-            The menu features a tempting selection of fried chicken, sides, and sauces,
-            all crafted to elevate the experience. Whether grabbing a quick bite or sharing a hearty meal
-            with loved ones, AFC offers a satisfying, no-fuss dining experience.
-            Committed to quality and hospitality, AFC ensures every visit is filled with warmth, crunch, and deliciousness.          </p>
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl leading-loose">
+            <span className="text-[#ebbd28] font-bold">Absolutely Fried Chicken</span> was born from a bold idea to serve food that’s not just delicious, but made with integrity. We craft fresh, flavorful fried chicken, burgers, pizzas, desserts, and mojitos never using frozen ingredients. Our passionate chefs and caring team ensure every meal is memorable. Committed to quality and customer care, we also empower entrepreneurs with a trusted, low-investment franchise model. At AFC, you’re not just enjoying a meal—you’re joining a fresh, friendly food revolution.
+          </p>
         </motion.div>
       </section>
 

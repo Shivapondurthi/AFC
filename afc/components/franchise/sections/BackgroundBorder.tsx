@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 
 type CardProps = {
   image: string;
@@ -69,12 +69,15 @@ const Card: React.FC<CardProps> = ({ image, title, points, cta }) => (
         viewport={{ once: true }}
         className="mt-6"
       >
+        <a href="#contact">
         <motion.button
           whileHover={{ scale: 1.05 }}
           className="w-full bg-[#ebbd28] text-black font-extrabold text-center py-3 rounded-[30px] border border-black text-sm"
+        
         >
           {cta}
         </motion.button>
+        </a>
       </motion.div>
     </motion.div>
   </motion.div>
@@ -82,37 +85,36 @@ const Card: React.FC<CardProps> = ({ image, title, points, cta }) => (
 
 export const BackgroundBorder: React.FC = () => {
   const sectionRef = React.useRef(null);
-  const isInView = useInView(sectionRef, { once: true });
 
   const cardData: CardProps[] = [
     {
-      image: "https://c.animaapp.com/89fS0TNm/img/grab--n--go-model-3.png",
+      image: "/images/fra-1.png",
       title: "Grab & Go Model",
       points: [
         "Quick service restaurant format",
         "Compact space requirement: 150-250 sq ft",
-        "Ideal for high-traffic locations",
+        "Ideal for high-traffic, metropolitan Areas",
         "Focused on takeaway and delivery"
       ],
       cta: "Learn More About Grab & Go"
     },
     {
-      image: "https://c.animaapp.com/HEE7tW43/img/image-82.png",
+      image: "/images/fra-2.png",
       title: "Express Kitchen",
       points: [
         "Full-service restaurant model",
         "Space requirement: 500-800 sq ft",
-        "Dine-in and takeaway options",
+        "Dine-in upto 20-30 people and aslo takeaway",
         "Complete kitchen setup"
       ],
       cta: "Explore Express Kitchen"
     },
     {
-      image: "https://c.animaapp.com/HEE7tW43/img/image-83.png",
+      image: "/images/fra-3.png",
       title: "Premium Outlet",
       points: [
         "Flagship restaurant format",
-        "Space requirement: 1000-1500 sq ft",
+        "Space requirement: 800-1500 sq ft",
         "Full dining experience",
         "Premium location focus"
       ],

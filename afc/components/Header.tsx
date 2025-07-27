@@ -132,11 +132,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import OrderDetailsCard from "@/components/ui/OrderDetailsCard";
+import Image from "next/image";
 
 const tabs = [
   { name: "HOME", href: "/" },
@@ -149,7 +149,6 @@ const tabs = [
 const Header = () => {
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState("");
-  const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
   const tabRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [scrolled, setScrolled] = useState(false);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
@@ -174,14 +173,6 @@ const Header = () => {
     }
   }, [pathname]);
 
-  useEffect(() => {
-    const index = tabs.findIndex((tab) => tab.name === activeTab);
-    const tabElement = tabRefs.current[index];
-    if (tabElement) {
-      const { offsetLeft, clientWidth } = tabElement;
-      setUnderlineStyle({ left: offsetLeft, width: clientWidth });
-    }
-  }, [activeTab]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -210,10 +201,15 @@ const Header = () => {
       <div className="relative h-[80px] md:h-[130px] flex items-center justify-between px-4 md:px-8">
         {/* Logo */}
         <Link href="/" onClick={() => setActiveTab("HOME")}>
-          <img
+          <Image
             src="/images/Afc-logo.png"
-            alt="Logo"
+            alt="AFC Restaurant Logo"
             className="w-20 h-20 md:w-32 md:h-32 object-cover"
+            width={128}
+            height={128}
+            priority
+            quality={95}
+            sizes="(max-width: 768px) 80px, 128px"
           />
         </Link>
 
@@ -227,7 +223,7 @@ const Header = () => {
               className="no-underline hover:no-underline"
             >
               <div
-                ref={(el) => (tabRefs.current[index] = el)}
+                ref={(el) => { tabRefs.current[index] = el; }}
                 onClick={() => setActiveTab(tab.name)}
                 className={`relative font-black text-xl tracking-[2px] px-4 py-2 cursor-pointer overflow-hidden`}
               >
@@ -299,10 +295,14 @@ const Header = () => {
             onClick={() => setIsOrderModalOpen(true)}
           >
             <span className="font-black text-black text-xl">ORDER NOW</span>
-            <img
+            <Image
               src="https://c.animaapp.com/X56oiYEi/img/image-54@2x.png"
-              alt="Order"
+              alt="Order Icon"
               className="w-[90px] h-[60px] object-cover"
+              width={90}
+              height={60}
+              loading="lazy"
+              quality={85}
             />
           </div>
         </motion.div>
@@ -359,10 +359,14 @@ const Header = () => {
                     }}
                   >
                     <span className="font-black text-black text-xl sm:text-2xl">ORDER NOW</span>
-                    <img
+                    <Image
                       src="https://c.animaapp.com/X56oiYEi/img/image-54@2x.png"
-                      alt="Order"
-                      className="w-[90px] h-[40px] object-cover"  // Adjusted image size
+                      alt="Order Icon"
+                      className="w-[90px] h-[40px] object-cover"
+                      width={90}
+                      height={40}
+                      loading="lazy"
+                      quality={85}
                     />
                   </div>
                 </motion.div>

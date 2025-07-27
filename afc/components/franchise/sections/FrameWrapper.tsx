@@ -1,131 +1,335 @@
 "use client";
-import React from "react";
-import { motion, useInView } from "framer-motion";
-import Image from "next/image";
 
-export const FrameWrapper = () => {
-  const sectionRef = React.useRef(null);
-  const isInView = useInView(sectionRef, { once: true });
+import React, { useState ,useEffect} from 'react';
+import { Phone, Mail, Twitter, Instagram, MessageCircle } from 'lucide-react';
+import { motion, AnimatePresence } from "framer-motion";
 
-  const formVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        staggerChildren: 0.1
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  message: string;
+}
+
+const ContactForm: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    address: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async () => {
+    if (!formData.firstName || !formData.email || !formData.address || !formData.message) {
+      setSubmitError('Please fill in all required fields');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError('');
+
+    try {
+      const payload = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        message: formData.message
+      };
+
+      // Use appropriate API URL based on environment
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://afc-backend-fhlt.onrender.com';
+      
+      // Create fetch with timeout
+      const fetchWithTimeout = async (url: string, options: RequestInit, timeout = 10000) => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+        
+        try {
+          const response = await fetch(url, {
+            ...options,
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+          return response;
+        } catch (error) {
+          clearTimeout(timeoutId);
+          throw error;
+        }
+      };
+
+      const response = await fetchWithTimeout(`${API_URL}/api/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      }, 15000); // 15 second timeout
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.message || 'Network response was not ok');
       }
+
+      const data = await response.json();
+      console.log('Success:', data);
+      setShowSuccessModal(true);
+
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        address: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      
+      // More specific error messages
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          setSubmitError('Request timed out. Please try again.');
+        } else if (error.message.includes('fetch')) {
+          setSubmitError('Network error. Please check your connection and try again.');
+        } else {
+          setSubmitError(error.message || 'Failed to send message. Please try again later.');
+        }
+      } else {
+        setSubmitError('Failed to send message. Please try again later.');
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const inputVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.3 }
+  useEffect(() => {
+    if (showSuccessModal) {
+      const timeout = setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 3000);
+      return () => clearTimeout(timeout);
     }
-  };
+  }, [showSuccessModal]);
+<AnimatePresence>
+  {showSuccessModal && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/50 backdrop-blur-[4px] flex items-center justify-center z-50"
+    >
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="bg-white rounded-2xl shadow-xl p-6 md:p-10 max-w-sm w-full text-center relative"
+      >
+        <h2 className="text-2xl font-bold mb-4 text-green-600">Success!</h2>
+        <p className="text-gray-700 mb-6">Your message was sent successfully.</p>
+        <button
+          onClick={() => setShowSuccessModal(false)}
+          className="bg-[#ebbd28] hover:bg-black hover:text-white text-black px-6 py-2 rounded-full font-semibold transition-all duration-300"
+        >
+          Close
+        </button>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
 
   return (
-    <motion.div
-      ref={sectionRef}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      className="relative w-full py-20 flex flex-row items-center justify-center gap-12"
-    >
-      <div className="flex flex-wrap justify-center items-start gap-12 max-w-[1440px] px-6">
-        {/* Left: Form section */}
-        <motion.div
-          variants={formVariants}
-          className="relative w-full md:w-[600px] bg-opacity-70 p-8 rounded-xl shadow-lg"
-        >
-          <h2 className="text-3xl font-bold text-[#ebbd28] mb-6">Contact Us</h2>
-          
-          <form className="flex flex-col gap-4">
-            {["Name", "Email", "Phone"].map((field) => (
-              <motion.div 
-                key={field}
-                variants={inputVariants}
-                className="flex flex-col gap-1"
+    <div className="min-h-screen p-4 md:p-8 flex items-center justify-center relative">
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0  bg-blur-100 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-xl p-6 md:p-10 max-w-sm w-full text-center relative">
+            <h2 className="text-2xl font-bold mb-4 text-green-600">Success!</h2>
+            <p className="text-gray-700 mb-6">Your message was sent successfully.</p>
+            <button
+              onClick={() => setShowSuccessModal(false)}
+              className="bg-[#ebbd28] hover:bg-black hover:text-white text-black px-6 py-2 rounded-full font-semibold transition-all duration-300"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-7xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
+
+        <div className="w-full lg:w-2/5 bg-[#ebbd28] text-white p-8 md:p-12 relative overflow-hidden">
+          <div className="absolute bottom-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-black rounded-full opacity-90 transform translate-x-20 translate-y-20 md:translate-x-32 md:translate-y-32"></div>
+          <div className="absolute bottom-12 right-12 w-32 h-32 md:w-40 md:h-40 bg-white rounded-full opacity-60"></div>
+
+          <div className="relative z-10 text-black">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">Contact Information</h1>
+            <p className="mb-8 md:mb-16 text-base md:text-lg">Say something to start a live chat!</p>
+
+            <div className="space-y-6 md:space-y-12">
+              <div className="flex items-center space-x-4 md:space-x-6">
+                <div className="p-2">
+                  <Phone className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                </div>
+                <span className="text-base md:text-xl">+91 7674073004</span>
+              </div>
+
+              <div className="flex items-center space-x-4 md:space-x-6">
+                <div className="p-2">
+                  <Mail className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                </div>
+                <span className="text-base md:text-xl">afcindiaofficial@gmail.com</span>
+              </div>
+
+              <div className="flex items-center space-x-4 md:space-x-6">
+              </div>
+            </div>
+
+            <div className="flex space-x-4 md:space-x-6 mt-12 md:mt-20" id='contact1'>
+              <a 
+                href="https://twitter.com/AfcIndian" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 md:w-12 md:h-12 bg-black bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 hover:scale-110 transition-all duration-300"
               >
-                <label className="text-white text-sm">{field}</label>
+                <Twitter className="w-4 h-4 md:w-6 md:h-6 text-white" />
+              </a>
+              <a 
+                href="https://www.instagram.com/afcofficial.in/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 md:w-12 md:h-12 bg-black bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 hover:scale-110 transition-all duration-300"
+              >
+                <Instagram className="w-4 h-4 md:w-6 md:h-6 text-white" />
+              </a>
+              <a 
+                href="https://wa.me/+917674073004" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 md:w-12 md:h-12 bg-black bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 hover:scale-110 transition-all duration-300"
+              >
+                <MessageCircle className="w-4 h-4 md:w-6 md:h-6 text-white" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side - Form */}
+        <div className="w-full lg:w-3/5 p-6 md:p-8 lg:p-16 bg-transparent">
+          <div className="max-w-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
+              <div>
+                <label className="block text-gray-600 text-sm mb-2">First Name *</label>
                 <input
-                  type={
-                    field === "Email" ? "email" : 
-                    field === "Phone" ? "tel" : "text"
-                  }
-                  className="w-full h-12 px-4 rounded-md bg-transparent border-2 border-[#ebbd28] text-white placeholder-gray-300 focus:outline-none"
-                  placeholder={`Enter your ${field}`}
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  className="w-full pb-3 border-b-2 border-gray-200 text-gray-900 focus:border-[#ebbd28] outline-none text-base md:text-lg bg-transparent transition-colors"
+                  required
                 />
-              </motion.div>
-            ))}
+              </div>
+              <div>
+                <label className="block text-gray-600 text-sm mb-2">Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  className="w-full pb-3 border-b-2 border-gray-200 text-gray-900 focus:border-[#ebbd28] outline-none text-base md:text-lg bg-transparent transition-colors"
+                />
+              </div>
+            </div>
 
-            <motion.div 
-              variants={inputVariants}
-              className="flex flex-col gap-1"
-            >
-              <label className="text-white text-sm">Address</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12">
+              <div>
+                <label className="block text-gray-600 text-sm mb-2">Email *</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full pb-3 border-b-2 border-gray-200 text-gray-900 focus:border-[#ebbd28] outline-none text-base md:text-lg bg-transparent transition-colors"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-600 text-sm mb-2">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  className="w-full pb-3 border-b-2 text-gray-900 border-gray-200 focus:border-[#ebbd28] outline-none text-base md:text-lg bg-transparent transition-colors"
+                />
+              </div>
+            </div>
+
+            <div className="mb-6 md:mb-8">
+              <label className="block text-gray-600 text-sm mb-2">Address *</label>
               <textarea
-                className="w-full h-32 px-4 py-2 rounded-md bg-transparent border-2 border-[#ebbd28] text-white placeholder-gray-300 focus:outline-none resize-none"
-                placeholder="Enter your address"
-              />
-            </motion.div>
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
+                className="w-full pb-3 border-b-2 text-gray-900 border-gray-200 focus:border-[#ebbd28] outline-none text-base md:text-lg bg-transparent resize-none transition-colors"
+                rows={2}
+                required
+              ></textarea>
+            </div>
 
-            <motion.button
-              variants={inputVariants}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full bg-[#ebbd28] text-black font-bold py-3 rounded-md hover:bg-yellow-500 transition mt-4"
-            >
-              Submit
-            </motion.button>
-          </form>
-        </motion.div>
+            <div className="mb-8 md:mb-12" id='contact'>
+              <label className="block text-gray-600 text-sm mb-2">Message *</label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleInputChange}
+                rows={4}
+                className="w-full pb-3 border-b-2 text-gray-900 border-gray-200 focus:border-[#ebbd28] outline-none text-base md:text-lg bg-transparent resize-none transition-colors"
+                placeholder="Write your message..."
+                required
+              ></textarea>
+            </div>
 
-        {/* Right: Text content and image */}
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col gap-8 max-w-[468px]"
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Image
-              width={468}
-              height={353}
-              className="w-full h-auto object-cover rounded-xl"
-              alt="AFC Experience"
-              src="https://c.animaapp.com/89fS0TNm/img/image-61@2x.png"
-            />
-          </motion.div>
+            {submitError && (
+              <div className="mb-4 text-red-500 text-sm">
+                {submitError}
+              </div>
+            )}
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl leading-8 text-white"
-          >
-            <span className="font-black text-[#ebbd28]">
-              Absolutely Fried Chicken
-            </span>
-            {" "}
-            can access your favorite social media platforms seamlessly while
-            enjoying your meal. Share mouthwatering snapshots of your dining
-            experience or connect with friends online in between bites of our
-            crispy delights. Embrace the intersection of delicious food and
-            digital connectivity for a modern dining experience.
-          </motion.p>
-        </motion.div>
+            <div className="flex justify-end">
+              <button
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className={`${isSubmitting ? 'bg-gray-400' : 'bg-[#ebbd28] hover:bg-black hover:text-white'} text-black px-8 py-3 md:px-12 md:py-4 rounded-full font-semibold text-base md:text-lg transition-all duration-300 shadow-lg`}
+              >
+                {isSubmitting ? 'Sending...' : 'Send Message'}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
-export default FrameWrapper;
+export default ContactForm;

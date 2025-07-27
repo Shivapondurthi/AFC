@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const stats = [
-  { number: "150+", label: "Locations" },
-  { number: "95%", label: "Success Rate" },
-  { number: "₹40L+", label: "Avg. Monthly Revenue" }
+  { number: "5+", label: "Locations" },
+  { number: "10k+", label:"Happy customers"}
 ];
 
 const testimonials = [
@@ -17,7 +17,7 @@ const testimonials = [
     quote: "AFC's proven business model and support system helped me expand to 3 successful outlets in just 2 years.",
     location: "Bangalore",
     revenue: "₹48L/month",
-    image: "/images/owner1.png"
+    image: "/images/h-success-1.jpg"
   },
   {
     name: "Priya Shah",
@@ -25,7 +25,7 @@ const testimonials = [
     quote: "The training and ongoing support from AFC made my transition to restaurant ownership seamless.",
     location: "Mumbai",
     revenue: "₹52L/month",
-    image: "/images/owner2.png"
+    image: "/images/h-success-2.avif"
   },
   {
     name: "Rajesh Kumar",
@@ -33,7 +33,7 @@ const testimonials = [
     quote: "The brand recognition and quality standards have helped me build a loyal customer base quickly.",
     location: "Delhi",
     revenue: "₹45L/month",
-    image: "/images/owner3.jpg"
+    image: "/images/h-success-3.avif"
   }
 ];
 
@@ -77,7 +77,7 @@ export const FranchiseSection = () => {
               Build Your Success Story with AFC
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-white mb-8 md:mb-12 leading-relaxed">
-              Join India's fastest-growing QSR franchise network. Our partners average
+              Join India&apos;s fastest-growing QSR franchise network. Our partners average
               ₹40L+ monthly revenue with our proven business model.
             </p>
 
@@ -141,7 +141,7 @@ export const FranchiseSection = () => {
           >
             <div className="relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden mb-6 sm:mb-8">
               <Image
-                src="/images/afc_store.png"
+                src="/images/fra-1.png"
                 alt="AFC Store"
                 width={600}
                 height={400}
@@ -178,7 +178,7 @@ export const FranchiseSection = () => {
                         {testimonials[currentTestimonial].role}
                       </p>
                       <p className="text-white text-sm sm:text-base mb-2 sm:mb-3 italic">
-                        "{testimonials[currentTestimonial].quote}"
+                        &quot;{testimonials[currentTestimonial].quote}&quot;
                       </p>
                       <div className="flex items-center justify-between flex-wrap gap-2">
                         <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-400">
@@ -240,14 +240,16 @@ export const FranchiseSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-[#ebbd28] text-black px-8 sm:px-12 py-3 sm:py-4 rounded-lg sm:rounded-xl font-bold text-lg sm:text-xl
-              hover:bg-yellow-500 transition-all duration-300 shadow-lg"
-          >
-            Start Your Journey
-          </motion.button>
+          <Link href="/franchise">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-[#ebbd28] text-black px-8 sm:px-12 py-3 sm:py-4 rounded-lg sm:rounded-xl font-bold text-lg sm:text-xl
+                hover:bg-yellow-500 transition-all duration-300 shadow-lg"
+            >
+              Start Your Journey
+            </motion.button>
+          </Link>
         </motion.div>
       </motion.div>
     </div>

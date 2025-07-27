@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import OrderDetailsCard from "@/components/ui/OrderDetailsCard";
 
 interface FeaturedDish {
   id: number;
@@ -17,43 +18,45 @@ interface FeaturedDish {
 const featuredDishes: FeaturedDish[] = [
   {
     id: 1,
-    name: "Classic Fried Chicken",
-    description: "Our signature crispy chicken marinated in secret blend of spices.",
-    price: "₹299",
-    image: "/images/burger.png",
-    rating: 4.8,
+    name: "Fried Chicken Combos",
+    description: "A delightful combo of crispy fried chicken pieces, seasoned to perfection and served with sides.",
+    price: "₹599",
+    image: "/images/combo-3.jpg",
+    rating: 5,
     isBestSeller: true,
   },
   {
     id: 2,
-    name: "Spicy Wings Bucket",
-    description: "8 pieces of perfectly spiced wings with our signature sauce.",
-    price: "₹399",
-    image: "/images/pizza.png",
-    rating: 4.5,
+    name: "Pizza",
+    description: "Cheesy and delicious pizza topped with flavorful chicken, veggies, and special seasonings.",
+    price: "₹160",
+    image: "/images/piza-4.JPG",
+    rating: 5,
   },
   {
     id: 3,
-    name: "Family Feast",
-    description: "12 pieces chicken, 4 sides, and drinks. Perfect for sharing!",
-    price: "₹999",
-    image: "/images/fried-chicken.jpg",
+    name: "Sandwich",
+    description: "Grilled chicken sandwich layered with fresh veggies and sauces, perfect for a quick bite.",
+    price: "₹99",
+    image: "/images/sd-2.JPG",
     rating: 5,
     isBestSeller: true,
   },
   {
     id: 4,
-    name: "Chicken Burger Combo",
-    description: "Crispy chicken fillet, fresh veggies with fries and drink.",
-    price: "₹349",
-    image: "/images/combo-home.jpg",
+    name: "Milk shakes",
+    description: "Thick and creamy milkshakes in a variety of classic flavors to cool you down.",
+    price: "₹160",
+    image: "/images/milkshake-1.JPG",
     rating: 4.6,
   },
 ];
 
+
 export const FeaturedDishSection = () => {
   const [currentDish, setCurrentDish] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
 
   useEffect(() => {
     if (isHovered) return;
@@ -137,6 +140,11 @@ export const FeaturedDishSection = () => {
                   fill
                   className="object-cover rounded-xl"
                   priority
+                  onError={(e) => {
+                    console.error('Featured dish image failed to load:', featuredDishes[currentDish].image);
+                    // Fallback to combo-3.jpg if image fails
+                    e.currentTarget.src = '/images/combo-3.jpg';
+                  }}
                 />
                 {featuredDishes[currentDish].isBestSeller && (
                   <motion.div
@@ -202,8 +210,8 @@ export const FeaturedDishSection = () => {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-[#ebbd28] text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full 
-                      font-bold text-base sm:text-lg hover:bg-yellow-500 transition-colors order-1 sm:order-2"
+                    className="bg-[#ebbd28] text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-yellow-500 transition-colors order-1 sm:order-2"
+                    onClick={() => setIsOrderModalOpen(true)}
                   >
                     Order Now
                   </motion.button>
@@ -283,6 +291,12 @@ export const FeaturedDishSection = () => {
           </div>
         </div>
       </div>
+
+      {/* Order Details Modal */}
+      <OrderDetailsCard
+        isOpen={isOrderModalOpen}
+        onClose={() => setIsOrderModalOpen(false)}
+      />
     </section>
   );
 };

@@ -1,42 +1,46 @@
+
 "use client"
 
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 
 const PIZZA_SIZE = 400
 const RADIUS = 550
 
+// Fixed angle step calculation
 const categories = {
+  chickenfries: [
+    { id: 1, name: "Chicken Popcorn", desc: "", img: "/images/m-fires-14.png" },
+    { id: 2, name: "Chicken Legs", desc: "", img: "/images/m-fires-12.png" },
+    { id: 3, name: "Chicken Nuggets", desc: "", img: "/images/m-fires-11.png" },
+    { id: 4, name: "Chicken Lollypops", desc: "", img: "/images/m-fires-3.png" },
+  ],
   pizzas: [
-    { id: 1, name: "Margherita", desc: "Classic cheese & tomato", img: "/images/pizza.png" },
-    { id: 2, name: "Pepperoni", desc: "Spicy & bold", img: "/images/pizza2.png" },
-    { id: 3, name: "Veggie", desc: "Fresh & crispy", img: "/images/pizza3.png" },
-    { id: 4, name: "BBQ Chicken", desc: "Smoky & sweet", img: "/images/pizza.png" },
+    { id: 5, name: "Golden Corn Pizza", desc: "", img: "/images/m-pizza-3.png" },
+    { id: 6, name: "Chicken supreme pizza", desc: "", img: "/images/m-pizza-4.png" },
+    { id: 7, name: "Margherita pizza", desc: "", img: "/images/m-pizza-1.png" },
+    { id: 8, name: "Roasted chicken Pizza", desc: "", img: "/images/pizza-2.png" },
   ],
   burgers: [
-    { id: 5, name: "Cheeseburger", desc: "Juicy with melted cheese", img: "images/burger1.png" },
-    { id: 6, name: "Veggie Burger", desc: "Grilled garden delight", img: "images/burger2.png" },
-    { id: 7, name: "Double Beef", desc: "Stacked & meaty", img: "images/burger3.png" },
-    { id: 8, name: "Monster Burger", desc: "Mega-sized goodness", img: "images/burger2.png" },
+    { id: 9, name: "Chicken Crispy Burger", desc: "", img: "/images/m-burger-1.png" },
+    { id: 10, name: "Veg Popular", desc: "", img: "/images/m-burger-5.png" },
+    { id: 11, name: "Chicken Patty Burger", desc: "", img: "/images/burger3.png" },
+    { id: 12, name: "Spicy Paneer Burger", desc: "", img: "/images/burger2.png" },
   ],
   mocktails: [
-    { id: 9, name: "Mojito", desc: "Minty & fresh", img: "images/mocktail2.png" },
-    { id: 10, name: "Berry Blast", desc: "Fruity explosion", img: "images/mocktail1.png" },
-    { id: 11, name: "Sunset Punch", desc: "Tropical vibe", img: "images/mocktail3.png" },
-    { id: 12, name: "Citrus Rush", desc: "Zesty delight", img: "images/mocktail2.png" },
+    { id: 13, name: "Virgin Mojito", desc: "", img: "/images/m-moktail-2.png" },
+    { id: 14, name: "Blue Lagoon Mojito", desc: "", img: "/images/m-moktail-1.png" },
+    { id: 15, name: "Green Mint Mojito", desc: "", img: "/images/m-mojito-5.png" },
+    { id: 16, name: "Watermelon Mojito", desc: "", img: "/images/m-mocktail-4.png" },
   ],
-  chickenfries: [
-    { id: 13, name: "Crispy Strips", desc: "Golden & crunchy", img: "images/fires1.png" },
-    { id: 14, name: "Spicy Wings", desc: "Hot & saucy", img: "images/fires2.png" },
-    { id: 15, name: "Nuggets", desc: "Bite-sized flavor", img: "images/fires1.png" },
-    { id: 16, name: "Hot Drumsticks", desc: "Fiery & crunchy", img: "images/fires2.png" },
-  ]
+
 }
 
 const PizzaSpinWheel = () => {
   const categoryKeys = Object.keys(categories)
-  const [activeCategory, setActiveCategory] = useState("pizzas")
-  const [spinningItems, setSpinningItems] = useState(categories["pizzas"])
+  const [activeCategory, setActiveCategory] = useState("chickenfries")
+  const [spinningItems, setSpinningItems] = useState(categories["chickenfries"])
   const [rotation, setRotation] = useState(0)
   const [activeIndex, setActiveIndex] = useState(0)
   const rotationRef = useRef(0)
@@ -44,10 +48,10 @@ const PizzaSpinWheel = () => {
   const angleStep = spinningItems?.length ? 360 / spinningItems.length : 0
 
   useEffect(() => {
-    setSpinningItems(categories[activeCategory])
+    setSpinningItems(categories[activeCategory as keyof typeof categories])
     setRotation(0)
     rotationRef.current = 0
-    setActiveIndex(0)
+    setActiveIndex(2)
   }, [activeCategory])
 
   const handleNext = () => {
@@ -66,7 +70,7 @@ const PizzaSpinWheel = () => {
     setActiveIndex(newIndex)
   }
 
-  const handleSelectItem = (i) => {
+  const handleSelectItem = (i: number) => {
     const targetRotation = -i * angleStep
     const diff = (targetRotation - rotationRef.current + 540) % 360 - 180
     setRotation(rotationRef.current + diff)
@@ -77,14 +81,14 @@ const PizzaSpinWheel = () => {
   return (
     <div className="relative overflow-hidden">
       {/* Animated background elements */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 opacity-90"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       />
-      
-      <motion.div 
+
+      <motion.div
         className="absolute inset-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.3 }}
@@ -102,19 +106,19 @@ const PizzaSpinWheel = () => {
         >
           <div className="text-center pt-40 font-extrabold text-white text-[54px]">OUR MENU</div>
           <div className="flex justify-center items-center gap-4 mb-8">
-            <motion.div 
+            <motion.div
               className="h-[3px] w-25 bg-yellow-300"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
             />
-            <motion.div 
+            <motion.div
               className="w-5 h-5 rounded-full bg-[#ebbd28]"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.4, type: "spring" }}
             />
-            <motion.div 
+            <motion.div
               className="h-[3px] w-25 bg-yellow-300"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
@@ -128,16 +132,20 @@ const PizzaSpinWheel = () => {
           <div className="absolute left-10 flex flex-col items-center gap-6">
             <AnimatePresence mode="wait">
               <motion.div
-                key={spinningItems[activeIndex]?.id}
-                className="text-center mt-4 max-w-[400px] min-h-[60px] mr-40"
+                key={spinningItems[activeIndex]?.id || activeCategory}
+                // FIX 1: Set a fixed width to stop the container from resizing.
+
+                className="w-[450px] min-h-[90px] mt-4 ml-15" // Increased min-height for content
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
               >
                 <motion.h1
+                  // FIX 3: Removed `ml-18` and `w-auto`. Text is now left-aligned
+                  // within the stable parent container, preventing any movement.
                   className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent"
-                  animate={{ 
+                  animate={{
                     textShadow: "0 0 10px rgba(234, 179, 8, 0.5)"
                   }}
                 >
@@ -151,28 +159,31 @@ const PizzaSpinWheel = () => {
               </motion.div>
             </AnimatePresence>
 
-            <motion.div 
+            <motion.div
               className="flex gap-4 flex-wrap w-[450px] justify-center"
             >
               {categoryKeys.map((key) => (
-                <motion.img
+                <motion.div
                   key={key}
-                  src={categories[key][0].img}
-                  alt={key}
-                  className={`w-20 h-20 object-cover rounded-full border-2 cursor-pointer ${
-                    key === activeCategory ? "border-yellow-500 scale-110" : "border-transparent"
-                  }`}
-                  
-                  
+                  className={`w-20 h-20 object-cover rounded-full border-2 cursor-pointer relative transition-all duration-300 ${key === activeCategory ? "border-yellow-500 scale-110" : "border-transparent"
+                    }`}
                   onClick={() => setActiveCategory(key)}
-                />
+                >
+                  <Image
+                    src={categories[key as keyof typeof categories][0].img}
+                    alt={key}
+                    className="w-full h-full object-cover rounded-full"
+                    width={80}
+                    height={80}
+                  />
+                </motion.div>
               ))}
             </motion.div>
           </div>
 
           {/* Carousel */}
           <div className="absolute left-[1500px] w-[440px] h-[440px]">
-            <motion.h1 
+            <motion.h1
               className="text-4xl text-white left-[-1400px] absolute font-bold"
             >
               <motion.span
@@ -185,35 +196,35 @@ const PizzaSpinWheel = () => {
                   ease: "linear"
                 }}
               >
-                Today's Special
+                Our Specials
               </motion.span>
-              <motion.div 
+              <motion.div
                 className="h-1 bg-gradient-to-r from-yellow-400 to-yellow-600 mt-2"
               />
             </motion.h1>
-            
+
             {/* Navigation buttons */}
-           <div className="absolute top-1/2 left-[-300] transform -translate-x-1/2 -translate-y-1/2 z-20 flex items-center">
-  <motion.button
-    onClick={handlePrev}
-    className="w-16 h-16 mr-[600px] ml-[2px] rounded-full  flex items-center justify-center shadow-lg"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-    </svg>
-  </motion.button>
+            <div className="absolute top-1/2 left-[-300] transform -translate-x-1/2 -translate-y-1/2 z-20 flex items-center">
+              <motion.button
+                onClick={handlePrev}
+                className="w-16 h-16 mr-[600px] ml-[2px] rounded-full  flex items-center justify-center shadow-lg"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </motion.button>
 
-  <motion.button
-    onClick={handleNext}
-    className="w-16 h-16 mr-[100px] rounded-full  flex items-center justify-center shadow-lg"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-    </svg>
-  </motion.button>
-</div>
+              <motion.button
+                onClick={handleNext}
+                className="w-16 h-16 mr-[100px] rounded-full  flex items-center justify-center shadow-lg"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </motion.button>
+            </div>
 
-            
+
             <motion.div
               animate={{ rotate: rotation }}
               transition={{ type: "spring", stiffness: 80, damping: 15 }}
@@ -236,19 +247,21 @@ const PizzaSpinWheel = () => {
                       height: `${PIZZA_SIZE}px`,
                     }}
                     animate={{ rotate: -rotation }}
-                    
+
                   >
-                    <img
+                    <Image
                       src={item.img}
                       alt={item.name}
-                      className="object-contain cursor-pointer rounded-full w-full h-full  hover:scale-130 hover:rotate-10 transition-transform duration-300"
+                      className="object-contain cursor-pointer  w-full h-full  hover:scale-130 hover:rotate-10 transition-transform duration-300"
                       onClick={() => handleSelectItem(i)}
+                      width={PIZZA_SIZE}
+                      height={PIZZA_SIZE}
                     />
                   </motion.div>
                 )
               })}
             </motion.div>
-            
+
             {/* Center circle */}
             <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-yellow-500 rounded-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-xl">
               <div className="w-24 h-24 bg-yellow-400 rounded-full flex items-center justify-center">
